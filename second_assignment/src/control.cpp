@@ -2,8 +2,8 @@
 #include "sensor_msgs/LaserScan.h"
 #include "std_srvs/Empty.h"
 #include "geometry_msgs/Twist.h"
-#include "RT1_Assignment2/Service.h"
-#include "RT1_Assignment2/Vel.h"
+#include "second_assignment/Service.h"
+#include "second_assignment/Vel.h"
 
 ros::Publisher pub;
 geometry_msgs::Twist vel;
@@ -89,21 +89,19 @@ void callbackFnc(const sensor_msgs::LaserScan::ConstPtr &msg)
 	pub.publish(vel);
 }
 
-void callbackFnc2(const RT1_Assignment2::Vel::ConstPtr& s)
+void callbackFnc2(const second_assignment::Vel::ConstPtr &msg)
 {
-	multiplier = s->m_msg;
+	multiplier = msg->m_msg;
 }
 
 int main(int argc, char ** argv)
 {
-	ros::init(argc, argv, "circuitcontroller_node");
+	ros::init(argc, argv, "control");
 	ros::NodeHandle nh;
 	
-	pub = nh.advertise<geometry_msgs::Twist> ("/cmd_vel", 50);
-	
-	ros::Subscriber sub2 = nh.subscribe("/vel", 50, callbackFnc2);
-	ros::Subscriber sub = nh.subscribe("/base_scan", 50, callbackFnc);
-	
+	ros::Subscriber sub = nh.subscribe("/base_scan", 1, callbackFnc);
+	ros::Subscriber sub2 = nh.subscribe("/vel", 1, callbackFnc2)
+	pub = nh.advertise<geometry_msgs::Twist> ("/cmd_vel", 1);	
 
 	ros::spin();
 	return 0;

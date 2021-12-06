@@ -1,13 +1,13 @@
 #include "ros/ros.h"
 #include "sensor_msgs/LaserScan.h"
 #include "std_srvs/Empty.h"
-#include "RT1_Assignment2/Service.h"
+#include "second_assignment/Service.h"
 
 std_srvs::Empty reset;
 
 float multiplier = 1;
 
-bool setVelocityFnc (RT1_Assignment2::Service::Request &req, RT1_Assignment2::Service::Response &res)
+bool setVelocityFnc (second_assignment::Service::Request &req, second_assignment::Service::Response &res)
 {
 	switch(req.input)
 	{
@@ -31,7 +31,7 @@ bool setVelocityFnc (RT1_Assignment2::Service::Request &req, RT1_Assignment2::Se
 
 int main(int argc, char ** argv)
 {
-	ros::init(argc, argv, "service_node");
+	ros::init(argc, argv, "service");
 	ros::NodeHandle nh;
 	ros::ServiceServer service = nh.advertiseService("/service", setVelocityFnc);
 	ros::spin();
