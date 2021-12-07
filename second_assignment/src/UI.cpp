@@ -20,6 +20,10 @@ void callBack()
 	// defining a char to use to store the input
 	char inputUsr;
 	
+	// The menù is not shown by the UI but by the control because they share the same shell
+	// since I decided to launch them by .launch file, so to have a clear output and avoid
+	// having mistakes in printing the instructions, I decided to put it there and not here.
+	// The result does not change, since the UI always take the input and call the service.
 	
 	// getting the keyboard input
 	std::cin >> inputUsr;
