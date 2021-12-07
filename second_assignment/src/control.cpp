@@ -5,104 +5,152 @@
 #include "second_assignment/Service.h"
 #include "second_assignment/Vel.h"
 
+// definition of the size for the right, front, left array
+#define SIZE 110
+
+// defining a publisher
 ros::Publisher pub;
+// defininf a variable vel of type geometry_msgs::Twist
 geometry_msgs::Twist vel;
 
 // front threshold for distance
 float f_th = 1.5;
-float f_m_th = 10;
-float multiplier = 1;
-float output = 0;
+
+// variable to change the velocity
+float change_term = 0;
+
+// variable representing the initial value of the velocity for the robot
 float start_vel_val = 1;
 
+// defining velocity, linear and angular, while the robot is in some corners
 float linear_corner = 0.5;
 float angular_corner = 1;
 
+// defining velocity, linear and angular, for the robot in the straight
 float min_lin_vel = 0.25;
-float max_lin_vel = 50;
+float max_lin_vel = 25;
 
+// function to calculate the minimun distance among array values
 double min_val(double a[])
 {
+	// setting dist as the maximux for the laser so that there cannot be errors
 	double dist = 30;
-	for(int i=0; i < 100; i++)
+	
+	// test each element of the array
+	for(int i=0; i < SIZE; i++)
 	{
+		// check if the value is less than the distance
 		if(a[i] < dist)
 		{
+			// update the distance with the value
 			dist = a[i];
 		}
 	}
+	// return the minimun distance found
 	return dist;
 }
 
+// call back function to change the factor for the velocity
 void callbackFnc(const sensor_msgs::LaserScan::ConstPtr &msg)
 {
-	// keep array
-
+	// take the size of the ranges[] array and initialise a new array, r, with the same dimension
 	float r[msg->ranges.size()];
+	
+	// scroll through all the array
 	for(int k = 0; k < msg->ranges.size(); k++)
-	{
+	{	
+		// initialising r
 		r[k] = msg->ranges[k];
 	}
 
-	double left[110];
-	double front[110];
-	double right[110];
+	// defining array representing the front, left and right of the robot
+	// the dimension of the array is such that it allows the robot have a good range of view
+	double left[SIZE];
+	double front[SIZE];
+	double right[SIZE];
 
-	for(int i = 609; i <= 719; i++)
+	// for loops are properly initialised in order to take exactly a range:
+	// each for loop is set to scroll SIZE values, but with the initiualization to define right, front and left ranges.
+
+	// left loop
+	for(int i = msg->ranges.size()-SIZE; i <= msg->ranges.size()-1; i++)
 	{
-		left[i-609] = r[i];
+		left[i-(msg->ranges.size()-SIZE)] = r[i];
 	}
 
-	for(int i = 304; i <= 414; i++)
+	// front loop
+	for(int i = (msg->ranges.size()/2 - SIZE/2 - 1); i <= (msg->ranges.size())/2 + SIZE/2 - 1; i++)
 	{
-		front[i-304] = r[i];
+		front[i-(msg->ranges.size()/2 - SIZE/2 - 1)] = r[i];
 	}
 
-	for(int i = 0; i <= 109; i++)
+	// right loop
+	for(int i = 0; i <= SIZE-1; i++)
 	{
 		right[i] = r[i];
 	}
 
-	// check the distance
+	// check if the distance is less than a certain threshold
 	if(min_val(front) < f_th)
 	{
+		// checking if the the right is nearest 
 		if(min_val(right) < min_val(left))
 		{
+			// setting the velocity to drive out from a corner
 			vel.angular.z = angular_corner;
 			vel.linear.x = linear_corner;
 		}
+		
+		// checking if the the left is nearest 
 		else if(min_val(right) > min_val(left))
 		{
+			// setting the velocity to drive out from a corner
 			vel.angular.z = - angular_corner;
 			vel.linear.x = linear_corner;
 		}
 	}
+	
+	// if the robot is far from a frontal wall
 	else if(min_val(front) > f_th)
 	{
 		// control to avoid having velocities too high or too low
 		if(vel.linear.x > min_lin_vel || vel.linear.x < max_lin_vel)
 		{
-			vel.linear.x = start_vel_val * multiplier;
+			// setting the velocity according to the service response
+			vel.linear.x = start_vel_val * change_term;
 			vel.angular.z = 0;
 		}
 	}
+	// showing lineare and angular velocity
+	ROS_INFO("Linear velocity :[%f, %f, %f]\n",vel.linear.x,vel.linear.y,vel.linear.z);
+	ROS_INFO("Angular velocity :  [%f, %f, %f]\n",vel.angular.x,vel.angular.y,vel.angular.z);
+	
+	// publish the velocity computed
 	pub.publish(vel);
 }
 
+// function to take the value according to the msg defined in Vel.msg
 void callbackFnc2(const second_assignment::Vel::ConstPtr &msg)
 {
-	multiplier = msg->m_msg;
+	change_term = msg->m_msg;
 }
 
+// main
 int main(int argc, char ** argv)
 {
+	// initialising the node
 	ros::init(argc, argv, "control");
+	// defining a node handle
 	ros::NodeHandle nh;
 	
+	// advertise the topic /cmd_vel
+	pub = nh.advertise<geometry_msgs::Twist> ("/cmd_vel", 1);
+	
+	// defining 2 subscrubers to subscribe to the /vel (message) and /base_scan topics to take infos
+	ros::Subscriber sub2 = nh.subscribe("/vel", 1, callbackFnc2);
 	ros::Subscriber sub = nh.subscribe("/base_scan", 1, callbackFnc);
-	ros::Subscriber sub2 = nh.subscribe("/vel", 1, callbackFnc2)
-	pub = nh.advertise<geometry_msgs::Twist> ("/cmd_vel", 1);	
 
+	// using this to spin the program
 	ros::spin();
 	return 0;
 }

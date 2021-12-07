@@ -139,7 +139,7 @@ include_directories(
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
  add_executable(circuitcontroller_node src/control.cpp)
- add_executable(service_node src/service.cpp)
+ add_executable(service_node src/server.cpp)
  add_executable(UI_node src/UI.cpp)
 
 ## Rename C++ executable without prefix
