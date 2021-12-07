@@ -20,11 +20,7 @@ void callBack()
 	// defining a char to use to store the input
 	char inputUsr;
 	
-	// show the menù
-	std::cout << "\n###################### MENU' ######################";
-	std::cout << "\nPress:\nw (or W) to accelerate;\ns (or S) to decelerate;\nr (or R) to reset the position;\nq (or Q) to stop the program execution.\n";
-	std::cout << "###################################################\n";
-	std::cout << "Insert here and press enter to confirm: ";
+	
 	// getting the keyboard input
 	std::cin >> inputUsr;
 

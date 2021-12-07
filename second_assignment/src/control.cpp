@@ -121,9 +121,15 @@ void callbackFnc(const sensor_msgs::LaserScan::ConstPtr &msg)
 			vel.angular.z = 0;
 		}
 	}
-	// showing lineare and angular velocity
-	ROS_INFO("Linear velocity :[%f, %f, %f]\n",vel.linear.x,vel.linear.y,vel.linear.z);
-	ROS_INFO("Angular velocity :  [%f, %f, %f]\n",vel.angular.x,vel.angular.y,vel.angular.z);
+	system("clear");
+	// showing linear and angular velocity
+	ROS_INFO("Linear velocity:[%f, %f, %f]\n",vel.linear.x,vel.linear.y,vel.linear.z);
+	ROS_INFO("Angular velocity:[%f, %f, %f]\n",vel.angular.x,vel.angular.y,vel.angular.z);
+	
+	// show the menù
+	std::cout << "\n###################### MENU' ######################";
+	std::cout << "\nPress:\nw (or W) to accelerate;\ns (or S) to decelerate;\nr (or R) to reset the position;\nq (or Q) to stop the program execution.\n";
+	std::cout << "###################################################\n";
 	
 	// publish the velocity computed
 	pub.publish(vel);
