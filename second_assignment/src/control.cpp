@@ -18,6 +18,8 @@ float f_th = 1.5;
 
 // variable to change the velocity
 float change_term = 0;
+float max_change = 3;
+float min_change = 0;
 
 // variable representing the initial value of the velocity for the robot
 float start_vel_val = 1;
@@ -25,10 +27,6 @@ float start_vel_val = 1;
 // defining velocity, linear and angular, while the robot is in some corners
 float linear_corner = 0.5;
 float angular_corner = 1;
-
-// defining velocity, linear and angular, for the robot in the straight
-float min_lin_vel = 0.25;
-float max_lin_vel = 25;
 
 // function to calculate the minimun distance among array values
 double min_val(double a[])
@@ -93,20 +91,60 @@ void callbackFnc(const sensor_msgs::LaserScan::ConstPtr &msg)
 	// check if the distance is less than a certain threshold
 	if(min_val(front) < f_th)
 	{
-		// checking if the the right is nearest 
-		if(min_val(right) < min_val(left))
+		if(change_term >= min_change && change_term <= max_change)
 		{
-			// setting the velocity to drive out from a corner
-			vel.angular.z = angular_corner;
-			vel.linear.x = linear_corner;
+			// checking if the the right is nearest 
+			if(min_val(right) < min_val(left))
+			{
+				// setting the velocity to drive out from a corner
+				vel.angular.z = angular_corner * change_term;
+				vel.linear.x = linear_corner * change_term;
+			}
+			
+			// checking if the the left is nearest 
+			else if(min_val(right) > min_val(left))
+			{
+				// setting the velocity to drive out from a corner
+				vel.angular.z = - angular_corner * change_term;
+				vel.linear.x = linear_corner * change_term;
+			}
 		}
 		
-		// checking if the the left is nearest 
-		else if(min_val(right) > min_val(left))
+		else if(change_term < min_change)
 		{
-			// setting the velocity to drive out from a corner
-			vel.angular.z = - angular_corner;
-			vel.linear.x = linear_corner;
+			// checking if the the right is nearest 
+			if(min_val(right) < min_val(left))
+			{
+				// setting the velocity to drive out from a corner
+				vel.angular.z = angular_corner * min_change;
+				vel.linear.x = linear_corner * min_change;
+			}
+			
+			// checking if the the left is nearest 
+			else if(min_val(right) > min_val(left))
+			{
+				// setting the velocity to drive out from a corner
+				vel.angular.z = - angular_corner * min_change;
+				vel.linear.x = linear_corner * min_change;
+			}
+		}
+		else if(change_term > max_change)
+		{
+			// checking if the the right is nearest 
+			if(min_val(right) < min_val(left))
+			{
+				// setting the velocity to drive out from a corner
+				vel.angular.z = angular_corner * max_change;
+				vel.linear.x = linear_corner * max_change;
+			}
+			
+			// checking if the the left is nearest 
+			else if(min_val(right) > min_val(left))
+			{
+				// setting the velocity to drive out from a corner
+				vel.angular.z = - angular_corner * max_change;
+				vel.linear.x = linear_corner * max_change;
+			}
 		}
 	}
 	
@@ -114,10 +152,23 @@ void callbackFnc(const sensor_msgs::LaserScan::ConstPtr &msg)
 	else if(min_val(front) > f_th)
 	{
 		// control to avoid having velocities too high or too low
-		if(vel.linear.x > min_lin_vel || vel.linear.x < max_lin_vel)
+		if(change_term >= min_change && change_term <= max_change)
 		{
 			// setting the velocity according to the service response
 			vel.linear.x = start_vel_val * change_term;
+			vel.angular.z = 0;
+		}
+		else if(change_term < min_change)
+		{
+			// setting the velocity according to the service response
+			vel.linear.x = start_vel_val * min_change;
+			vel.angular.z = 0;
+		}
+		
+		else if(change_term > max_change)
+		{
+			// setting the velocity according to the service response
+			vel.linear.x = start_vel_val * max_change;
 			vel.angular.z = 0;
 		}
 	}
