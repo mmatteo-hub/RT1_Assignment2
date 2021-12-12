@@ -176,6 +176,7 @@ void callbackFnc(const sensor_msgs::LaserScan::ConstPtr &msg)
 	// showing linear and angular velocity
 	ROS_INFO("Linear velocity:[%f, %f, %f]\n",vel.linear.x,vel.linear.y,vel.linear.z);
 	ROS_INFO("Angular velocity:[%f, %f, %f]\n",vel.angular.x,vel.angular.y,vel.angular.z);
+	std::cout << "Multiplier = %f\n",change_term:
 	
 	// show the menù
 	std::cout << "\n###################### MENU' ######################";
