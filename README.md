@@ -218,6 +218,15 @@ void callbackFnc(const sensor_msgs::LaserScan::ConstPtr &msg)
 	{
 		right[i] = r[i];
 	}
+	
+```
+Here we can see the way the lasers were chosen:
+
+<img src="https://user-images.githubusercontent.com/62358773/146564428-47990f73-5ee2-4cf2-b959-39998a455a2e.jpg" width=25%, height=25%>
+
+```
+
+
 
 	// check if the distance is less than a certain threshold
 	if(min_val(front) < f_th)
@@ -284,6 +293,9 @@ In order to determine the action the robot has to compute, it has used a simple 
 	* angular velocity > 0 to turn on the left.
 * at the end if the robot has a straight without any obstacles too near to it it can be changed the velocicty according to the menù provided through the *UI_node*.
 
+We can see in the video below the behaviour of the robot:
+
+![rec](https://user-images.githubusercontent.com/62358773/146563089-4d6eb837-6836-4eff-9bd6-91eaf374ed12.gif)
 
 ### Future Improvements
 The robot can be improved for example with the possibility of following the wall, in order to avoid going with a *zig zag* driving in certain situations. Moreover, since not required in the assignment, there could be the possibility of having the best ratio between linear and angular velocity during the corner in order to avoid collisions while turnings.
