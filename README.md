@@ -227,57 +227,43 @@ Here we can see the way the lasers were chosen:
 
 ```cpp
 ...
-	// check if the distance is less than a certain threshold
-	if(min_val(front) < f_th)
-	{
-		if(change_term >= min_change && change_term <= max_change)
-		{
-			// checking if the the right is nearest 
-			if(min_val(right) < min_val(left))
-			{
+	if(robot is near an obstacle)
+	
+		if(change_term is between the allowed interval)
+		
+			if(right distance is less than the left one)
+			
 				// setting the velocity to drive out from a corner
 				// turning on the left
-			}
 			
-			// checking if the the left is nearest 
-			else if(min_val(right) > min_val(left))
-			{
+			else if(right distance is more than the left one)
+			
 				// setting the velocity to drive out from a corner
 				// turning on the right
-			}
-		}
 		
-		else if(change_term < min_change)
-		{
+		else if(change_term is less than the minimum)
+		
 			//do the same to drive out the corner but
 			// putting the change term equals to the minimun available
-		}
-		else if(change_term > max_change)
-		{
+		
+		else if(change_term is greater than the maximum)
+		
 			//do the same to drive out the corner but
 			// putting the change term equals to the maximum available
-		}
-	}
 	
-	// if the robot is far from a frontal wall
-	else if(min_val(front) > f_th)
-	{
-		// control to avoid having velocities too high or too low
-		if(change_term >= min_change && change_term <= max_change)
-		{
-			// go straight if the change term is in a right range
-		}
-		else if(change_term < min_change)
-		{
-			// use the minimum change term if it was too low
-		}
+	else if(robot is far from obstacles)
+	
+		if(change_term is inside the allowed interval)
 		
-		else if(change_term > max_change)
-		{
+			// go straight if the change term is in a right range
+		
+		else if(change_term is less than the minimum)
+		
+			// use the minimum change term if it was too low
+		
+		else if(change_term is more than the maximum)
+		
 			// use the maximum change term if it was too high
-		}
-	}
-}
 ```
 The velocity can be changed both in the straight and in the corner: obviously there is the possibility of a crash if the robot has a velocity too high, in particular inside corners.
 
