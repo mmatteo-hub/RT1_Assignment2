@@ -228,54 +228,26 @@ void callbackFnc(const sensor_msgs::LaserScan::ConstPtr &msg)
 			if(min_val(right) < min_val(left))
 			{
 				// setting the velocity to drive out from a corner
-				vel.angular.z = angular_corner * change_term;
-				vel.linear.x = linear_corner * change_term;
+				// turning on the left
 			}
 			
 			// checking if the the left is nearest 
 			else if(min_val(right) > min_val(left))
 			{
 				// setting the velocity to drive out from a corner
-				vel.angular.z = - angular_corner * change_term;
-				vel.linear.x = linear_corner * change_term;
+				// turning on the right
 			}
 		}
 		
 		else if(change_term < min_change)
 		{
-			// checking if the the right is nearest 
-			if(min_val(right) < min_val(left))
-			{
-				// setting the velocity to drive out from a corner
-				vel.angular.z = angular_corner * min_change;
-				vel.linear.x = linear_corner * min_change;
-			}
-			
-			// checking if the the left is nearest 
-			else if(min_val(right) > min_val(left))
-			{
-				// setting the velocity to drive out from a corner
-				vel.angular.z = - angular_corner * min_change;
-				vel.linear.x = linear_corner * min_change;
-			}
+			//do the same to drive out the corner but
+			// putting the change term equals to the minimun available
 		}
 		else if(change_term > max_change)
 		{
-			// checking if the the right is nearest 
-			if(min_val(right) < min_val(left))
-			{
-				// setting the velocity to drive out from a corner
-				vel.angular.z = angular_corner * max_change;
-				vel.linear.x = linear_corner * max_change;
-			}
-			
-			// checking if the the left is nearest 
-			else if(min_val(right) > min_val(left))
-			{
-				// setting the velocity to drive out from a corner
-				vel.angular.z = - angular_corner * max_change;
-				vel.linear.x = linear_corner * max_change;
-			}
+			//do the same to drive out the corner but
+			// putting the change term equals to the maximum available
 		}
 	}
 	
@@ -285,22 +257,16 @@ void callbackFnc(const sensor_msgs::LaserScan::ConstPtr &msg)
 		// control to avoid having velocities too high or too low
 		if(change_term >= min_change && change_term <= max_change)
 		{
-			// setting the velocity according to the service response
-			vel.linear.x = start_vel_val * change_term;
-			vel.angular.z = 0;
+			// go straight if the change term is in a right range
 		}
 		else if(change_term < min_change)
 		{
-			// setting the velocity according to the service response
-			vel.linear.x = start_vel_val * min_change;
-			vel.angular.z = 0;
+			// use the minimum change term if it was too low
 		}
 		
 		else if(change_term > max_change)
 		{
-			// setting the velocity according to the service response
-			vel.linear.x = start_vel_val * max_change;
-			vel.angular.z = 0;
+			// use the maximum change term if it was too high
 		}
 	}
 }
