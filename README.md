@@ -224,7 +224,7 @@ void callbackFnc(const sensor_msgs::LaserScan::ConstPtr &msg)
 ```
 Here we can see the way the lasers were chosen:
 
-<img src="https://user-images.githubusercontent.com/62358773/146564428-47990f73-5ee2-4cf2-b959-39998a455a2e.jpg" width=25%, height=25%>
+<img src="https://user-images.githubusercontent.com/62358773/146564428-47990f73-5ee2-4cf2-b959-39998a455a2e.jpg" width=50%, height=50%>
 
 Below there is the pseudo code, later implementede in `C++`, used to drive the robot inside the circuit:
 
