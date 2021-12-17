@@ -161,7 +161,8 @@ bool setVelocityFnc (second_assignment::Service::Request &req, second_assignment
 }
 ```
 
-The control call back function has the due to change the velocity, according to some limitations imposed. Below there is the function in which it is clear the limitation used.
+The control call back function has the due to change the velocity, according to some limitations imposed.
+Below it is shown how the right, front and left array were initialised for being used later in the program:
 Just before the function it is also shown the group of global variables used:
 ```cpp
 // front threshold for distance
@@ -225,8 +226,9 @@ Here we can see the way the lasers were chosen:
 
 <img src="https://user-images.githubusercontent.com/62358773/146564428-47990f73-5ee2-4cf2-b959-39998a455a2e.jpg" width=25%, height=25%>
 
+Below there is the pseudo code, later implementede in `C++`, used to drive the robot inside the circuit:
+
 ```cpp
-...
 	if(robot is near an obstacle)
 	
 		if(change_term is between the allowed interval)
