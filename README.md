@@ -218,6 +218,7 @@ void callbackFnc(const sensor_msgs::LaserScan::ConstPtr &msg)
 	{
 		right[i] = r[i];
 	}
+...
 	
 ```
 Here we can see the way the lasers were chosen:
@@ -225,9 +226,7 @@ Here we can see the way the lasers were chosen:
 <img src="https://user-images.githubusercontent.com/62358773/146564428-47990f73-5ee2-4cf2-b959-39998a455a2e.jpg" width=25%, height=25%>
 
 ```
-
-
-
+...
 	// check if the distance is less than a certain threshold
 	if(min_val(front) < f_th)
 	{
